@@ -1,0 +1,12 @@
+{
+  "additional_bots": [
+    {
+      "name": "Archive-It Bot",
+      "description": "Internet Archive's Archive-It web crawling service",
+      "ip_ranges": [
+        "207.241.224.0/20",
+        "208.70.24.0/21"
+      ]
+    }
+  ]
+}

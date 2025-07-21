@@ -1,0 +1,7 @@
+# Development dependencies for linting and testing
+black>=22.0.0
+isort>=5.10.0
+flake8>=4.0.0
+pytest>=6.0.0
+pytest-cov>=2.8.1
+pytest-mock>=3.3.1

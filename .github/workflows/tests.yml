@@ -1,0 +1,64 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -e .
+        python -m pip install -r requirements-dev.txt
+        
+    - name: Run tests
+      run: |
+        python -m pytest --cov=good_bots --cov-report=term --cov-report=xml
+        
+    - name: Store test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: pytest-results-${{ matrix.python-version }}
+        path: |
+          .coverage
+          coverage.xml
+          pytest-report.xml
+        retention-days: 5
+        if-no-files-found: ignore
+        
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements-dev.txt
+        
+    - name: Check code formatting
+      run: |
+        black --check --skip-string-normalization good_bots tests
+        isort --check-only --profile black good_bots tests
+        flake8 good_bots tests --ignore=D100,D101,D202,D204,D205,D400,D401,E303,E501,W503,N805,N806 --count --max-line-length=120 --statistics
