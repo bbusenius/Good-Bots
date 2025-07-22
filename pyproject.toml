@@ -1,3 +1,62 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools-scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "good-bots"
+version = "1.0.0"
+authors = [{name = "Bradley Busenius"}]
+description = "Fetch bot IP addresses for django-turnstile-site-protect exclusion lists"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+keywords = ["django", "bot", "crawler", "ip", "security", "turnstile"]
+dynamic = ["dependencies"]
+
+[project.urls]
+Homepage = "https://github.com/bbusenius/Good-Bots"
+Repository = "https://github.com/bbusenius/Good-Bots.git"
+Issues = "https://github.com/bbusenius/Good-Bots/issues"
+
+[project.scripts]
+good-bots = "good_bots.cli:main"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=6.0.0",
+    "pytest-cov>=2.8.1", 
+    "pytest-mock>=3.3.1",
+]
+dev = [
+    "black>=22.0.0",
+    "isort>=5.10.0",
+    "flake8>=4.0.0",
+    "pytest>=6.0.0",
+    "pytest-cov>=2.8.1",
+    "pytest-mock>=3.3.1",
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."] 
+
+[tool.setuptools.package-data]
+good_bots = ["additional_bots.json"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
 [tool.black]
 skip-string-normalization = true
 target-version = ['py310']
@@ -25,3 +84,10 @@ include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
 ensure_newline_before_comments = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --tb=short"
